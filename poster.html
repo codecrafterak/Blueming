@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BLUEMING – Wearable AI Memory Assistant</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --blue-deep: #0A1628;
+    --blue-mid: #1A3A6B;
+    --blue-brand: #1565C0;
+    --blue-accent: #2196F3;
+    --blue-light: #E3F2FD;
+    --blue-pale: #F0F7FF;
+    --white: #FFFFFF;
+    --gray-light: #F5F8FC;
+    --gray-mid: #90A4AE;
+    --text-dark: #0D1B2A;
+    --text-body: #263238;
+    --gold: #FFC107;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #e0e8f0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .poster {
+    width: 794px;
+    min-height: 1123px;
+    background: var(--white);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 80px rgba(0,0,0,0.25);
+  }
+
+  /* ── TOP HEADER ── */
+  .header {
+    background: linear-gradient(135deg, var(--blue-deep) 0%, var(--blue-mid) 55%, var(--blue-brand) 100%);
+    padding: 28px 36px 22px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 260px; height: 260px;
+    border-radius: 50%;
+    background: rgba(33,150,243,0.15);
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: 80px;
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+  }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 14px;
+  }
+
+  .logo-circle {
+    width: 58px; height: 58px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue-accent), #42A5F5);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+    box-shadow: 0 4px 16px rgba(33,150,243,0.5);
+    border: 2px solid rgba(255,255,255,0.3);
+  }
+
+  .header-titles {
+    flex: 1;
+  }
+
+  .poster-title {
+    font-family: 'Sora', sans-serif;
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--white);
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  }
+  .title-highlight {
+    color: #64B5F6;
+  }
+
+  .poster-subtitle {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12.5px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.82);
+    margin-top: 4px;
+    letter-spacing: 0.3px;
+    max-width: 520px;
+  }
+
+  .header-meta {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.15);
+  }
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10.5px;
+    color: rgba(255,255,255,0.78);
+  }
+  .meta-icon { font-size: 13px; }
+  .meta-label { font-weight: 600; color: rgba(255,255,255,0.55); text-transform: uppercase; letter-spacing: 0.5px; font-size: 9px; }
+  .meta-value { font-weight: 400; }
+
+  .badge {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 9.5px;
+    color: rgba(255,255,255,0.9);
+    letter-spacing: 0.3px;
+  }
+
+  /* ── MIDDLE CONTENT ── */
+  .content {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    gap: 0;
+    padding: 0;
+    background: var(--white);
+  }
+
+  .col-left {
+    padding: 20px 18px 18px 24px;
+    border-right: 1.5px solid #E3EAF3;
+    background: var(--gray-light);
+  }
+
+  .col-right {
+    padding: 20px 24px 18px 18px;
+    background: var(--white);
+  }
+
+  /* Section Cards */
+  .section-card {
+    background: var(--white);
+    border-radius: 10px;
+    padding: 13px 15px;
+    margin-bottom: 12px;
+    border-left: 3.5px solid var(--blue-accent);
+    box-shadow: 0 2px 8px rgba(21,101,192,0.07);
+  }
+  .section-card:last-child { margin-bottom: 0; }
+
+  .section-card.green-accent { border-left-color: #00BCD4; }
+  .section-card.amber-accent { border-left-color: #FF7043; }
+  .section-card.teal-accent  { border-left-color: #26C6DA; }
+
+  .section-heading {
+    font-family: 'Sora', sans-serif;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--blue-mid);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 9px;
+  }
+  .section-icon {
+    width: 24px; height: 24px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+  .icon-blue  { background: var(--blue-light); }
+  .icon-cyan  { background: #E0F7FA; }
+  .icon-amber { background: #FBE9E7; }
+  .icon-teal  { background: #E0F2F1; }
+
+  .bullet-list { list-style: none; }
+  .bullet-list li {
+    font-size: 10.5px;
+    color: var(--text-body);
+    line-height: 1.55;
+    padding: 3px 0 3px 14px;
+    position: relative;
+  }
+  .bullet-list li::before {
+    content: '›';
+    position: absolute;
+    left: 0;
+    color: var(--blue-accent);
+    font-size: 13px;
+    font-weight: 700;
+    top: 2px;
+  }
+  .bullet-list li strong {
+    color: var(--blue-mid);
+    font-weight: 600;
+  }
+
+  /* ── WORKFLOW DIAGRAM ── */
+  .diagram-title {
+    font-family: 'Sora', sans-serif;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--blue-mid);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .workflow {
+    background: linear-gradient(160deg, var(--blue-pale) 0%, #EAF4FF 100%);
+    border-radius: 14px;
+    padding: 18px 14px;
+    border: 1.5px solid #BBDEFB;
+    position: relative;
+    overflow: hidden;
+  }
+  .workflow::before {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background: rgba(33,150,243,0.06);
+  }
+
+  .workflow-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+  }
+
+  .wf-step {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 13px;
+    background: var(--white);
+    border-radius: 10px;
+    border: 1.5px solid #BBDEFB;
+    position: relative;
+    box-shadow: 0 3px 10px rgba(21,101,192,0.09);
+    transition: all 0.2s;
+  }
+
+  .wf-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .wf-1 { background: linear-gradient(135deg,#E3F2FD,#BBDEFB); }
+  .wf-2 { background: linear-gradient(135deg,#E8EAF6,#C5CAE9); }
+  .wf-3 { background: linear-gradient(135deg,#E0F7FA,#B2EBF2); }
+  .wf-4 { background: linear-gradient(135deg,#E8F5E9,#C8E6C9); }
+  .wf-5 { background: linear-gradient(135deg,#FFF3E0,#FFE0B2); }
+
+  .wf-label {
+    flex: 1;
+  }
+  .wf-label strong {
+    display: block;
+    font-family: 'Sora', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--blue-deep);
+    margin-bottom: 2px;
+  }
+  .wf-label span {
+    font-size: 9.5px;
+    color: #546E7A;
+    line-height: 1.4;
+  }
+
+  .wf-arrow {
+    text-align: center;
+    padding: 5px 0;
+    font-size: 18px;
+    color: var(--blue-accent);
+    line-height: 1;
+  }
+
+  .wf-badge {
+    font-size: 8.5px;
+    font-weight: 600;
+    color: var(--white);
+    background: var(--blue-accent);
+    padding: 2px 7px;
+    border-radius: 10px;
+    letter-spacing: 0.2px;
+    white-space: nowrap;
+  }
+
+  /* ── BOTTOM SECTION ── */
+  .bottom {
+    background: linear-gradient(180deg, var(--blue-pale) 0%, #EDF4FB 100%);
+    padding: 16px 24px 18px;
+    border-top: 2px solid #BBDEFB;
+  }
+
+  .bottom-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 12px;
+  }
+
+  .bottom-card {
+    background: var(--white);
+    border-radius: 10px;
+    padding: 12px 12px 11px;
+    border-top: 3px solid var(--blue-accent);
+    box-shadow: 0 2px 8px rgba(21,101,192,0.08);
+  }
+  .bottom-card.c2 { border-top-color: #00ACC1; }
+  .bottom-card.c3 { border-top-color: #43A047; }
+  .bottom-card.c4 { border-top-color: #7B1FA2; }
+
+  .bottom-card-title {
+    font-family: 'Sora', sans-serif;
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    color: var(--blue-mid);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .bottom-card-title .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--blue-accent);
+    flex-shrink: 0;
+  }
+  .bottom-card.c2 .dot { background: #00ACC1; }
+  .bottom-card.c3 .dot { background: #43A047; }
+  .bottom-card.c4 .dot { background: #7B1FA2; }
+
+  .tag-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .tag {
+    font-size: 8.5px;
+    color: var(--blue-brand);
+    background: var(--blue-light);
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-weight: 500;
+  }
+  .tag.t2 { color: #006064; background: #E0F7FA; }
+  .tag.t3 { color: #1B5E20; background: #E8F5E9; }
+  .tag.t4 { color: #4A148C; background: #F3E5F5; }
+
+  .mini-list { list-style: none; }
+  .mini-list li {
+    font-size: 9.5px;
+    color: var(--text-body);
+    line-height: 1.6;
+    padding-left: 10px;
+    position: relative;
+  }
+  .mini-list li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: var(--blue-accent);
+    font-weight: 700;
+  }
+  .bottom-card.c2 .mini-list li::before { color: #00ACC1; }
+  .bottom-card.c3 .mini-list li::before { color: #43A047; }
+  .bottom-card.c4 .mini-list li::before { color: #7B1FA2; }
+
+  /* Footer bar */
+  .footer {
+    background: var(--blue-deep);
+    padding: 8px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-text {
+    font-size: 8.5px;
+    color: rgba(255,255,255,0.55);
+    font-weight: 300;
+  }
+  .footer-brand {
+    font-family: 'Sora', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    color: #64B5F6;
+    letter-spacing: 0.5px;
+  }
+
+  /* Tech stack row */
+  .tech-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 6px;
+  }
+  .tech-chip {
+    font-size: 8px;
+    background: #F0F4FF;
+    color: #1A237E;
+    border: 1px solid #C5CAE9;
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+  }
+
+  @media print {
+    body { background: white; padding: 0; }
+    .poster { box-shadow: none; width: 794px; }
+  }
+</style>
+</head>
+<body>
+<div class="poster">
+
+  <!-- ═══════════════ HEADER ═══════════════ -->
+  <header class="header">
+    <div class="header-top">
+      <div class="logo-circle">🎧</div>
+      <div class="header-titles">
+        <div class="poster-title">BLUE<span class="title-highlight">MING</span></div>
+        <div class="poster-subtitle">Wearable AI Memory Assistant — Second Brain for Students &nbsp;|&nbsp; AI-Powered Smart Earpods for Attention, Memory &amp; Real-Time Learning</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:5px;align-items:flex-end;">
+        <span class="badge">🏫 Academic Project</span>
+        <span class="badge">🤖 AI &amp; Wearable Tech</span>
+      </div>
+    </div>
+
+    <div class="header-meta">
+      <div class="meta-item">
+        <span class="meta-icon">👥</span>
+        <div>
+          <div class="meta-label">Team Members</div>
+          <div class="meta-value">Ajay Kumar U (Idea Creator) &nbsp;·&nbsp; Ajay A &nbsp;·&nbsp; Ajay Kumar R &nbsp;·&nbsp; Abhishek P</div>
+        </div>
+      </div>
+      <div class="meta-item">
+        <span class="meta-icon">🏛️</span>
+        <div>
+          <div class="meta-label">Department &amp; College</div>
+          <div class="meta-value">CSE &nbsp;·&nbsp; Panimalar Engineering College</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════════ MIDDLE CONTENT ═══════════════ -->
+  <div class="content">
+
+    <!-- LEFT COLUMN -->
+    <div class="col-left">
+
+      <div class="section-card">
+        <div class="section-heading">
+          <div class="section-icon icon-blue">📖</div>
+          Introduction
+        </div>
+        <ul class="bullet-list">
+          <li>Students <strong>lose focus</strong> and forget critical lecture content due to distractions and cognitive overload</li>
+          <li>Traditional note-taking is <strong>slow, incomplete,</strong> and prone to error during fast-paced lectures</li>
+          <li>No seamless tool exists to <strong>capture, process, and recall</strong> academic content in real time</li>
+          <li>The gap between <strong>hearing and retaining</strong> information is the core challenge in modern education</li>
+        </ul>
+      </div>
+
+      <div class="section-card green-accent">
+        <div class="section-heading">
+          <div class="section-icon icon-cyan">🎯</div>
+          Objective
+        </div>
+        <ul class="bullet-list">
+          <li><strong>Improve attention</strong> through real-time audio monitoring and smart alerts</li>
+          <li><strong>Enhance memory retention</strong> with AI-generated summaries and structured notes</li>
+          <li>Enable <strong>quick, intelligent recall</strong> of past lectures via a personal knowledge base</li>
+          <li>Create a <strong>seamless, wearable</strong> learning companion that works passively</li>
+        </ul>
+      </div>
+
+      <div class="section-card amber-accent">
+        <div class="section-heading">
+          <div class="section-icon icon-amber">⚠️</div>
+          Problem Statement
+        </div>
+        <ul class="bullet-list">
+          <li><strong>Loss of focus</strong> — distractions break learning continuity during lectures</li>
+          <li><strong>Missed information</strong> — critical concepts are lost when attention lapses</li>
+          <li><strong>Poor revision methods</strong> — manual re-reading is inefficient and time-consuming</li>
+          <li><strong>No smart indexing</strong> — students cannot search or query past lecture content easily</li>
+        </ul>
+      </div>
+
+      <div class="section-card teal-accent">
+        <div class="section-heading">
+          <div class="section-icon icon-teal">💡</div>
+          Proposed Solution
+        </div>
+        <ul class="bullet-list">
+          <li>BLUEMING <strong>captures live lecture audio</strong> passively through smart Bluetooth earpods</li>
+          <li>AI converts speech to text using <strong>advanced speech recognition</strong> models</li>
+          <li><strong>NLP summarization</strong> extracts key concepts and condenses content automatically</li>
+          <li>Summaries are <strong>securely stored</strong> in the cloud and accessible via a mobile app anytime</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN – DIAGRAM -->
+    <div class="col-right">
+
+      <div class="diagram-title">
+        <div class="section-icon icon-blue" style="width:22px;height:22px;font-size:11px;">🔄</div>
+        System Architecture &amp; Workflow
+      </div>
+
+      <div class="workflow">
+        <div class="workflow-steps">
+
+          <div class="wf-step">
+            <div class="wf-icon wf-1">🎧</div>
+            <div class="wf-label">
+              <strong>① Audio Capture</strong>
+              <span>Bluetooth earpods continuously record ambient lecture audio in high-fidelity digital format. Noise cancellation filters background interference.</span>
+            </div>
+            <span class="wf-badge">Hardware</span>
+          </div>
+
+          <div class="wf-arrow">↓</div>
+
+          <div class="wf-step">
+            <div class="wf-icon wf-2">🧠</div>
+            <div class="wf-label">
+              <strong>② Speech-to-Text (AI Processing)</strong>
+              <span>Deep learning ASR model transcribes audio stream in real time with high accuracy across accents and speaking speeds.</span>
+            </div>
+            <span class="wf-badge">AI / NLP</span>
+          </div>
+
+          <div class="wf-arrow">↓</div>
+
+          <div class="wf-step">
+            <div class="wf-icon wf-3">📝</div>
+            <div class="wf-label">
+              <strong>③ Text Summarization</strong>
+              <span>Transformer-based NLP model extracts key points, topics, and action items — condensing lengthy lectures into structured, readable summaries.</span>
+            </div>
+            <span class="wf-badge">NLP Model</span>
+          </div>
+
+          <div class="wf-arrow">↓</div>
+
+          <div class="wf-step">
+            <div class="wf-icon wf-4">☁️</div>
+            <div class="wf-label">
+              <strong>④ Secure Cloud Storage</strong>
+              <span>Encrypted summaries, transcripts and tags are stored in a personal secure cloud vault with automatic backup and indexing.</span>
+            </div>
+            <span class="wf-badge">Cloud</span>
+          </div>
+
+          <div class="wf-arrow">↓</div>
+
+          <div class="wf-step">
+            <div class="wf-icon wf-5">📱</div>
+            <div class="wf-label">
+              <strong>⑤ Mobile App Access</strong>
+              <span>Students access notes, summaries, smart search and flashcards via a clean mobile interface. Recall engine reinforces memory at optimal intervals.</span>
+            </div>
+            <span class="wf-badge">App / UI</span>
+          </div>
+
+        </div>
+
+        <!-- Mini legend -->
+        <div style="margin-top:14px;padding-top:10px;border-top:1px solid #BBDEFB;display:flex;gap:8px;flex-wrap:wrap;">
+          <div style="font-size:8.5px;color:#546E7A;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;width:100%;margin-bottom:4px;">Technology Stack</div>
+          <span class="tech-chip">Bluetooth 5.0</span>
+          <span class="tech-chip">Whisper ASR</span>
+          <span class="tech-chip">BERT / GPT</span>
+          <span class="tech-chip">Firebase</span>
+          <span class="tech-chip">React Native</span>
+          <span class="tech-chip">REST API</span>
+          <span class="tech-chip">AES-256 Encryption</span>
+          <span class="tech-chip">Spaced Repetition</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════ BOTTOM SECTION ═══════════════ -->
+  <div class="bottom">
+    <div style="font-family:'Sora',sans-serif;font-size:10px;font-weight:700;color:var(--blue-mid);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:11px;">
+      ◆ &nbsp;Feature Overview &amp; Project Details
+    </div>
+    <div class="bottom-grid">
+
+      <!-- Core Features -->
+      <div class="bottom-card">
+        <div class="bottom-card-title"><span class="dot"></span>Core Features</div>
+        <div class="tag-grid">
+          <span class="tag">🎙️ Real-time STT</span>
+          <span class="tag">📋 AI Summarization</span>
+          <span class="tag">🔔 Attention Alerts</span>
+          <span class="tag">🔍 Smart Recall</span>
+          <span class="tag">🧩 Memory Reinforcement</span>
+          <span class="tag">📱 Mobile App</span>
+          <span class="tag">🔒 Secure Storage</span>
+          <span class="tag">🏷️ Auto-Tagging</span>
+        </div>
+      </div>
+
+      <!-- Technical Overview -->
+      <div class="bottom-card c2">
+        <div class="bottom-card-title"><span class="dot"></span>Technical Overview</div>
+        <ul class="mini-list">
+          <li><strong>Hardware:</strong> BT 5.0 Earpods + Mic Array</li>
+          <li><strong>Speech AI:</strong> Whisper / DeepSpeech</li>
+          <li><strong>NLP:</strong> BERT, GPT Summarization</li>
+          <li><strong>Cloud:</strong> Firebase / AWS Encrypted</li>
+          <li><strong>App:</strong> React Native (iOS &amp; Android)</li>
+          <li><strong>Recall:</strong> Spaced Repetition Engine</li>
+        </ul>
+      </div>
+
+      <!-- Use Cases -->
+      <div class="bottom-card c3">
+        <div class="bottom-card-title"><span class="dot"></span>Use Cases</div>
+        <ul class="mini-list">
+          <li>Engineering &amp; medical students</li>
+          <li>Corporate training sessions</li>
+          <li>Conference &amp; seminar capture</li>
+          <li>Language learning &amp; practice</li>
+          <li>Accessibility for differently-abled</li>
+          <li>Remote learning environments</li>
+        </ul>
+      </div>
+
+      <!-- Conclusion + Future Scope -->
+      <div class="bottom-card c4">
+        <div class="bottom-card-title"><span class="dot"></span>Future Scope</div>
+        <ul class="mini-list">
+          <li>Real-time multilingual translation</li>
+          <li>AR integration for visual overlay</li>
+          <li>Emotion detection &amp; mood tracking</li>
+          <li>Offline AI processing mode</li>
+          <li>Multi-device sync ecosystem</li>
+          <li>Advanced analytics dashboard</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Conclusion Statement -->
+    <div style="margin-top:14px;padding:12px 14px;background:var(--white);border-radius:8px;border-left:3px solid #7B1FA2;box-shadow:0 2px 6px rgba(0,0,0,0.06);">
+      <div style="font-family:'Sora',sans-serif;font-size:9px;font-weight:700;color:var(--blue-mid);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:5px;">📌 Conclusion</div>
+      <p style="font-size:10px;color:var(--text-body);line-height:1.5;">
+        <strong>BLUEMING</strong> enhances learning by improving focus, memory retention, and intelligent recall through AI-powered wearable technology. By seamlessly capturing, processing, and organizing lecture content, it empowers students to learn smarter, retain more, and perform better academically.
+      </p>
+    </div>
+  </div>
+
+  <!-- ═══════════════ FOOTER ═══════════════ -->
+  <div class="footer">
+    <div class="footer-text">
+      © 2024 BLUEMING Project &nbsp;·&nbsp; Panimalar Engineering College &nbsp;·&nbsp; Computer Science &amp; Engineering
+    </div>
+    <div class="footer-brand">
+      BLUEMING
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
